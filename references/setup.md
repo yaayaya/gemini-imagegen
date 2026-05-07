@@ -29,7 +29,7 @@ Install the Gemini SDK:
 python -m pip install google-genai
 ```
 
-Install Pillow if you want local downscaling or chroma-key post-processing:
+Install Pillow if you want local downscaling:
 
 ```bash
 python -m pip install pillow

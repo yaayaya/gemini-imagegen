@@ -189,6 +189,25 @@ class GeminiImageGenCliTests(unittest.TestCase):
         self.assertNotIn('name: "imagegen"', skill)
         self.assertNotIn("$imagegen", agent)
 
+    def test_transparent_background_workflow_is_not_advertised(self):
+        self.assertFalse((ROOT / "scripts" / "remove_chroma_key.py").exists())
+        banned = ["chroma", "cutout", "remove_chroma", "background-extraction", "transparent-background cutouts"]
+        checked = [
+            ROOT / "README.md",
+            ROOT / "README.en.md",
+            ROOT / "SKILL.md",
+            ROOT / "references" / "cli.md",
+            ROOT / "references" / "prompting.md",
+            ROOT / "references" / "sample-prompts.md",
+        ]
+        hits = []
+        for path in checked:
+            text = path.read_text(encoding="utf-8", errors="ignore").lower()
+            for term in banned:
+                if term in text:
+                    hits.append(f"{path.relative_to(ROOT)} contains {term}")
+        self.assertEqual(hits, [])
+
 
 if __name__ == "__main__":
     unittest.main()

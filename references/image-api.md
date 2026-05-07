@@ -135,4 +135,4 @@ Gemini returns image data in response parts as inline data. The CLI extracts ima
 - Inline input images should be kept small enough for Gemini API limits; the CLI warns above 20MB.
 - `--n` makes repeated model calls because Gemini image responses are not a multi-image variant array.
 - Use `generate-batch` for many different prompts.
-- Gemini image generation does not expose a native transparent-background CLI control; use chroma-key prompting plus `scripts/remove_chroma_key.py`.
+- Transparent-background output is not supported by this CLI.

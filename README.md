@@ -2,7 +2,7 @@
 
 **繁體中文** | [English](README.en.md)
 
-Gemini ImageGen 是一個使用 Gemini / Nano Banana 圖像模型的產圖 skill 與 Python CLI。它可以產生新的點陣圖、用文字加圖片進行編輯、批次生成多組提示詞，並支援用本機 chroma-key 後處理流程製作透明背景素材。
+Gemini ImageGen 是一個使用 Gemini / Nano Banana 圖像模型的產圖 skill 與 Python CLI。它可以產生新的點陣圖、用文字加圖片進行編輯，並批次生成多組提示詞。
 
 這個專案可以用兩種方式使用：
 
@@ -18,14 +18,13 @@ Gemini ImageGen 是一個使用 Gemini / Nano Banana 圖像模型的產圖 skill
 - 提供常見素材工作流的 prompt augmentation 欄位。
 - 本機輸出管理，預設避免覆蓋既有檔案。
 - 可選擇輸出較小的 web 版圖片。
-- 使用 Gemini 產生 chroma-key 素材，再用本機腳本製作透明背景 cutout。
 
 ## 需求
 
 - Python 3.10 或更新版本。
 - Gemini API key。
 - `google-genai`。
-- `pillow`，用於縮圖與 chroma-key 後處理。
+- `pillow`，用於輸出較小的 web 版圖片。
 
 安裝依賴：
 
@@ -137,40 +136,15 @@ python scripts/image_gen.py generate-batch \
   --concurrency 5
 ```
 
-## 透明背景 Cutout
+## 透明背景
 
-這不是 Gemini API 原生回傳透明背景。這個流程分成兩步：
-
-1. 用 Gemini 產生「主體 + 平坦 chroma-key 背景」的來源圖。
-2. 用本機 `scripts/remove_chroma_key.py` 把 key color 轉成透明 alpha。
-
-對於簡單的不透明主體，先把主體生成在平坦的 chroma-key 背景上：
-
-```bash
-python scripts/image_gen.py generate \
-  --prompt "A reusable water bottle centered on a perfectly flat solid #00ff00 background for local background removal; no shadows, gradients, texture, floor plane, reflection, text, or logos" \
-  --out tmp/imagegen/bottle-source.png
-```
-
-再用本機腳本移除 key color，輸出透明 PNG：
-
-```bash
-python scripts/remove_chroma_key.py \
-  --input tmp/imagegen/bottle-source.png \
-  --out output/imagegen/bottle-cutout.png \
-  --auto-key border \
-  --soft-matte \
-  --transparent-threshold 12 \
-  --opaque-threshold 220 \
-  --despill
-```
+目前不支援透明背景輸出。Gemini ImageGen 只負責產生或編輯一般點陣圖；如果需要高品質透明背景，建議使用專門的去背工具或手動修圖流程。
 
 ## 專案結構
 
 - `SKILL.md`：skill 使用規則。
 - `agents/gemini.yaml`：skill metadata。
 - `scripts/image_gen.py`：Gemini image CLI。
-- `scripts/remove_chroma_key.py`：本機 chroma-key 移除工具。
 - `references/`：使用、環境與 prompt 補充文件。
 - `tests/`：CLI 行為測試。
 

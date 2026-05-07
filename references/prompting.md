@@ -71,31 +71,9 @@ Change only the background. Keep the product, label text, edges, camera angle, a
 - Make one targeted change per retry.
 - Restate invariants every time.
 
-## Transparent images
+## Transparent backgrounds
 
-For simple opaque subjects, use chroma-key prompting:
-
-```text
-Create the requested subject on a perfectly flat solid #00ff00 chroma-key background for local background removal.
-The background must be one uniform color with no shadows, gradients, texture, floor plane, or lighting variation.
-Keep crisp edges and generous padding.
-Do not use #00ff00 anywhere in the subject.
-```
-
-Then run:
-
-```bash
-python scripts/remove_chroma_key.py \
-  --input tmp/imagegen/source.png \
-  --out output/imagegen/cutout.png \
-  --auto-key border \
-  --soft-matte \
-  --transparent-threshold 12 \
-  --opaque-threshold 220 \
-  --despill
-```
-
-Complex subjects such as hair, glass, smoke, liquids, translucent materials, reflections, and soft shadows may need manual cleanup or iteration.
+Transparent-background extraction is not supported by this skill. For transparent PNG assets, use a dedicated background-removal or image editing workflow after generating the source image.
 
 ## Use-case tips
 

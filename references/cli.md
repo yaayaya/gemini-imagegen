@@ -18,7 +18,7 @@ Optional post-processing dependencies:
 uv pip install pillow
 ```
 
-Pillow is needed for downscaling and local chroma-key post-processing.
+Pillow is needed for downscaling.
 
 ## API key
 
@@ -154,7 +154,7 @@ python scripts/image_gen.py generate \
 
 ## Output handling
 
-- Use `tmp/imagegen/` for scratch prompt files or intermediate chroma-key sources.
+- Use `tmp/imagegen/` for scratch prompt files.
 - Use `output/imagegen/` for final outputs.
 - Reruns fail if the target exists unless `--force` is set.
 - `--downscale-max-dim` writes an additional smaller copy with suffix `-web` by default.

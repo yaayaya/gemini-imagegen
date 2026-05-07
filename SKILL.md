@@ -1,6 +1,6 @@
 ---
 name: "gemini-imagegen"
-description: "Generate or edit raster images with Gemini / Nano Banana when a project needs bitmap visuals such as photos, illustrations, textures, sprites, mockups, product images, transparent-background cutouts, or visual variants. Use when Codex should create a new bitmap asset, transform an existing image, or derive variants from references. Do not use when deterministic SVG/vector/code-native output is a better fit."
+description: "Generate or edit raster images with Gemini / Nano Banana when a project needs bitmap visuals such as photos, illustrations, textures, sprites, mockups, product images, or visual variants. Use when Codex should create a new bitmap asset, transform an existing image, or derive variants from references. Do not use when deterministic SVG/vector/code-native output or transparent-background extraction is a better fit."
 ---
 
 # Gemini Image Generation Skill
@@ -36,7 +36,7 @@ All generated images include Google's SynthID watermark.
 
 - Generate a new image: concept art, product shot, cover, website hero, texture, sprite, icon-like bitmap, UI mockup, or infographic.
 - Generate a new image with one or more reference images for style, composition, subject direction, or visual mood using `generate --reference-image`.
-- Edit an existing image: object removal/replacement, background change, style transfer, lighting/weather changes, compositing, or transparent-background preparation.
+- Edit an existing image: object removal/replacement, background change, style transfer, lighting/weather changes, or compositing.
 - Create many assets or variants for a project.
 
 ## When not to use
@@ -74,38 +74,9 @@ Shared:
 Unsupported controls:
 - Do not use `quality`, `background`, `input_fidelity`, or `moderation`. They are not Gemini image CLI arguments.
 
-## Transparent image requests
+## Transparent-background requests
 
-Gemini image generation does not expose a universal local CLI flag for native transparent output. Use a chroma-key workflow for simple opaque subjects:
-
-1. Prompt Gemini to generate the subject on a perfectly flat solid chroma-key background.
-2. Default key color is `#00ff00`; use `#ff00ff` for green subjects.
-3. Require no shadows, gradients, texture, reflections, floor plane, or lighting variation in the background.
-4. Copy the generated source into the workspace or `tmp/imagegen/`.
-5. Run `scripts/remove_chroma_key.py`:
-
-```bash
-python scripts/remove_chroma_key.py \
-  --input tmp/imagegen/source.png \
-  --out output/imagegen/cutout.png \
-  --auto-key border \
-  --soft-matte \
-  --transparent-threshold 12 \
-  --opaque-threshold 220 \
-  --despill
-```
-
-If the request involves hair, glass, smoke, liquids, translucent materials, reflective objects, soft shadows, or key-color conflicts, explain that chroma-key removal may need iteration or manual cleanup.
-
-Prompt transparent requests like this:
-
-```text
-Create the requested subject on a perfectly flat solid #00ff00 chroma-key background for background removal.
-The background must be one uniform color with no shadows, gradients, texture, reflections, floor plane, or lighting variation.
-Keep the subject fully separated from the background with crisp edges and generous padding.
-Do not use #00ff00 anywhere in the subject.
-No cast shadow, no contact shadow, no reflection, no watermark, and no text unless explicitly requested.
-```
+Transparent-background extraction is not supported by this skill. If the user needs a high-quality transparent PNG, explain that this skill can generate or edit the source image, but background removal should be handled by a dedicated image editing or background-removal tool.
 
 ## Use-case taxonomy
 
@@ -127,7 +98,6 @@ Edit:
 - `identity-preserve`
 - `precise-object-edit`
 - `lighting-weather`
-- `background-extraction`
 - `style-transfer`
 - `compositing`
 - `sketch-to-render`
@@ -161,4 +131,3 @@ Avoid: <negative constraints>
 - `references/sample-prompts.md`: copy/paste examples.
 - `references/setup.md`: setup, API key, dependencies, and environment notes.
 - `scripts/image_gen.py`: Gemini CLI implementation.
-- `scripts/remove_chroma_key.py`: local transparent-background helper.

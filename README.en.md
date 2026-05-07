@@ -2,7 +2,7 @@
 
 [繁體中文](README.md) | **English**
 
-Gemini ImageGen is a small Gemini / Nano Banana image generation skill and Python CLI. It can generate new raster images, edit existing images with text-and-image prompts, run prompt batches, and create transparent-background assets through local chroma-key post-processing.
+Gemini ImageGen is a small Gemini / Nano Banana image generation skill and Python CLI. It can generate new raster images, edit existing images with text-and-image prompts, and run prompt batches.
 
 The project is intentionally usable in two ways:
 
@@ -18,14 +18,13 @@ The project is intentionally usable in two ways:
 - Prompt augmentation fields for common asset workflows.
 - Local output management with non-destructive defaults.
 - Optional downscaled web copies.
-- Gemini-generated chroma-key sources plus a local transparent-background cutout script.
 
 ## Requirements
 
 - Python 3.10 or newer.
 - A Gemini API key.
 - `google-genai`.
-- `pillow` for downscaling and chroma-key post-processing.
+- `pillow` for optional downscaled web copies.
 
 Install dependencies:
 
@@ -137,40 +136,15 @@ python scripts/image_gen.py generate-batch \
   --concurrency 5
 ```
 
-## Transparent Cutouts
+## Transparent Backgrounds
 
-This is not native transparent-background output from the Gemini API. The workflow has two steps:
-
-1. Use Gemini to generate a source image with the subject on a flat chroma-key background.
-2. Use the local `scripts/remove_chroma_key.py` helper to convert the key color to alpha transparency.
-
-For simple opaque subjects, generate the subject on a flat chroma-key background:
-
-```bash
-python scripts/image_gen.py generate \
-  --prompt "A reusable water bottle centered on a perfectly flat solid #00ff00 background for local background removal; no shadows, gradients, texture, floor plane, reflection, text, or logos" \
-  --out tmp/imagegen/bottle-source.png
-```
-
-Then remove the key color locally and write a transparent PNG:
-
-```bash
-python scripts/remove_chroma_key.py \
-  --input tmp/imagegen/bottle-source.png \
-  --out output/imagegen/bottle-cutout.png \
-  --auto-key border \
-  --soft-matte \
-  --transparent-threshold 12 \
-  --opaque-threshold 220 \
-  --despill
-```
+Transparent-background output is not supported. Gemini ImageGen focuses on generating and editing regular raster images. For high-quality transparent backgrounds, use a dedicated background-removal tool or a manual image editing workflow.
 
 ## Project Layout
 
 - `SKILL.md`: skill instructions.
 - `agents/gemini.yaml`: skill metadata.
 - `scripts/image_gen.py`: Gemini image CLI.
-- `scripts/remove_chroma_key.py`: local chroma-key removal helper.
 - `references/`: usage, environment, and prompting notes.
 - `tests/`: CLI behavior tests.
 

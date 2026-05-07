@@ -54,20 +54,6 @@ python scripts/image_gen.py generate \
   --out output/imagegen/solar-infographic.png
 ```
 
-## Transparent cutout source
-
-```text
-Use case: background-extraction
-Asset type: transparent product cutout source
-Primary request: isolate a clean product photo of a reusable water bottle
-Scene/backdrop: perfectly flat solid #00ff00 chroma-key background for local removal
-Composition/framing: centered product, full silhouette visible, generous padding
-Constraints: background must be one uniform color with no shadows, gradients, texture, reflections, floor plane, or lighting variation; crisp edges; no halos; preserve label text exactly; do not use #00ff00 anywhere in the bottle
-Avoid: cast shadow, contact shadow, reflection, extra props, watermark
-```
-
-After generating the source image, run `scripts/remove_chroma_key.py`.
-
 ## Background replacement edit
 
 ```text

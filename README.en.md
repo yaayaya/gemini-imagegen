@@ -2,7 +2,7 @@
 
 [繁體中文](README.md) | **English**
 
-Gemini ImageGen is a small Gemini / Nano Banana image generation skill and Python CLI. It can generate new raster images, edit existing images with text-and-image prompts, run prompt batches, and create chroma-key sources for transparent-background assets.
+Gemini ImageGen is a small Gemini / Nano Banana image generation skill and Python CLI. It can generate new raster images, edit existing images with text-and-image prompts, run prompt batches, and create transparent-background assets through local chroma-key post-processing.
 
 The project is intentionally usable in two ways:
 
@@ -18,7 +18,7 @@ The project is intentionally usable in two ways:
 - Prompt augmentation fields for common asset workflows.
 - Local output management with non-destructive defaults.
 - Optional downscaled web copies.
-- Chroma-key workflow for transparent-background cutouts.
+- Gemini-generated chroma-key sources plus a local transparent-background cutout script.
 
 ## Requirements
 
@@ -139,6 +139,11 @@ python scripts/image_gen.py generate-batch \
 
 ## Transparent Cutouts
 
+This is not native transparent-background output from the Gemini API. The workflow has two steps:
+
+1. Use Gemini to generate a source image with the subject on a flat chroma-key background.
+2. Use the local `scripts/remove_chroma_key.py` helper to convert the key color to alpha transparency.
+
 For simple opaque subjects, generate the subject on a flat chroma-key background:
 
 ```bash
@@ -147,7 +152,7 @@ python scripts/image_gen.py generate \
   --out tmp/imagegen/bottle-source.png
 ```
 
-Then remove the key color:
+Then remove the key color locally and write a transparent PNG:
 
 ```bash
 python scripts/remove_chroma_key.py \

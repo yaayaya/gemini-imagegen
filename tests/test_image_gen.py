@@ -121,6 +121,29 @@ class GeminiImageGenCliTests(unittest.TestCase):
         self.assertEqual(payload["inputs"], [str(image_path)])
         self.assertEqual(payload["generationConfig"]["imageConfig"], {"aspectRatio": "1:1"})
 
+    def test_generate_dry_run_accepts_reference_images(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            image_path = Path(tmp) / "style.png"
+            image_path.write_bytes(b"fake-png")
+            code, stdout, stderr = self.run_main(
+                [
+                    "generate",
+                    "--reference-image",
+                    str(image_path),
+                    "--prompt",
+                    "Create a new poster using the reference image only for style",
+                    "--out",
+                    "output/imagegen/reference-poster.png",
+                    "--dry-run",
+                ]
+            )
+
+        self.assertEqual(code, 0, stderr)
+        payload = json.loads(stdout)
+        self.assertEqual(payload["inputs"], [str(image_path)])
+        self.assertEqual(payload["inputRole"], "reference")
+        self.assertEqual(payload["contents"][0]["parts"][1]["inlineData"]["mimeType"], "image/png")
+
     def test_loads_raw_api_key_from_env_txt(self):
         module = load_module()
         with tempfile.TemporaryDirectory() as tmp:

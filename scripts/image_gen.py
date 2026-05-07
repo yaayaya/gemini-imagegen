@@ -260,6 +260,7 @@ def _build_dry_run_payload(
     outputs: List[Path],
     downscaled: Optional[List[str]],
     image_paths: Optional[List[Path]] = None,
+    input_role: Optional[str] = None,
 ) -> Dict[str, Any]:
     parts: List[Dict[str, Any]] = [{"text": prompt}]
     if image_paths:
@@ -283,6 +284,8 @@ def _build_dry_run_payload(
     }
     if image_paths:
         payload["inputs"] = [str(p) for p in image_paths]
+    if input_role:
+        payload["inputRole"] = input_role
     if getattr(args, "google_search", False):
         payload["tools"] = [{"googleSearch": {}}]
     return payload
@@ -770,6 +773,7 @@ def _generate_batch(args: argparse.Namespace) -> None:
 
 def _generate(args: argparse.Namespace) -> None:
     prompt = _augment_prompt(args, _read_prompt(args.prompt, args.prompt_file))
+    reference_paths = _check_image_paths(args.reference_image or [])
     output_format = _normalize_output_format(args.output_format)
     output_paths = _build_output_paths(args.out, output_format, args.n, args.out_dir)
     downscaled = None
@@ -777,7 +781,16 @@ def _generate(args: argparse.Namespace) -> None:
         downscaled = [str(_derive_downscale_path(p, args.downscale_suffix)) for p in output_paths]
 
     if args.dry_run:
-        _print_request(_build_dry_run_payload(args=args, prompt=prompt, outputs=output_paths, downscaled=downscaled))
+        _print_request(
+            _build_dry_run_payload(
+                args=args,
+                prompt=prompt,
+                outputs=output_paths,
+                downscaled=downscaled,
+                image_paths=reference_paths or None,
+                input_role="reference" if reference_paths else None,
+            )
+        )
         return
 
     print("Calling Gemini API (generation). This can take up to a couple of minutes.", file=sys.stderr)
@@ -786,7 +799,17 @@ def _generate(args: argparse.Namespace) -> None:
     for idx in range(args.n):
         if args.n > 1:
             print(f"Variant {idx + 1}/{args.n}", file=sys.stderr)
-        images.extend(_run_generate_request_with_retries(args, prompt, attempts=args.max_attempts))
+        if reference_paths:
+            images.extend(
+                _run_edit_request_with_retries(
+                    args,
+                    prompt,
+                    reference_paths,
+                    attempts=args.max_attempts,
+                )
+            )
+        else:
+            images.extend(_run_generate_request_with_retries(args, prompt, attempts=args.max_attempts))
     elapsed = time.time() - started
     print(f"Generation completed in {elapsed:.1f}s.", file=sys.stderr)
     _write_images(
@@ -889,6 +912,11 @@ def main() -> int:
 
     gen_parser = subparsers.add_parser("generate", help="Create a new image")
     _add_shared_args(gen_parser)
+    gen_parser.add_argument(
+        "--reference-image",
+        action="append",
+        help="Reference image to guide generation without treating it as an edit target. Repeat for multiple references.",
+    )
     gen_parser.set_defaults(func=_generate)
 
     batch_parser = subparsers.add_parser(

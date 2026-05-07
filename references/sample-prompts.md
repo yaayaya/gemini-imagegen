@@ -88,6 +88,29 @@ python scripts/image_gen.py edit \
   --out output/imagegen/product-sunset.png
 ```
 
+## Reference-image guided generation
+
+```text
+Use case: stylized-concept
+Asset type: website hero image
+Input images: Image 1 is a style reference only
+Primary request: create a new hero image for an AI image generation tool
+Style/medium: use the reference for color, lighting, and material feel
+Composition/framing: wide 16:9 composition with clean negative space
+Constraints: do not copy text, logos, exact layout, or identifiable proprietary elements from the reference
+Avoid: watermark, readable text, brand marks
+```
+
+Command:
+
+```bash
+python scripts/image_gen.py generate \
+  --reference-image input/style-reference.png \
+  --prompt "create a new hero image for an AI image generation tool; use Image 1 only for color, lighting, and material feel; do not copy text, logos, exact layout, or identifiable proprietary elements" \
+  --aspect-ratio 16:9 \
+  --out output/imagegen/reference-hero.png
+```
+
 ## Multi-image compositing
 
 ```text

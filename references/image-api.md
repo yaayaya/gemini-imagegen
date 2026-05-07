@@ -67,7 +67,20 @@ Send a text prompt as `contents=[prompt]`.
 
 `scripts/image_gen.py generate` maps to this pattern.
 
-## Text-and-image-to-image
+## Reference-image generation
+
+Gemini accepts text plus one or more input images in `generateContent`. Use this when images are references for style, composition, subject direction, or visual mood.
+
+`scripts/image_gen.py generate --reference-image ref.png --prompt "..."` maps to this pattern.
+
+Be explicit about the role of the image:
+
+```text
+Use Image 1 only as a visual style reference.
+Create a new product hero image with different objects and no copied text or logos.
+```
+
+## Text-and-image editing
 
 Send a prompt plus one or more input images.
 

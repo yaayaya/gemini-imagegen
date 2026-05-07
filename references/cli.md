@@ -59,6 +59,19 @@ python scripts/image_gen.py generate \
   --out output/imagegen/alpine-cabin.png
 ```
 
+## Generate with reference images
+
+Use `--reference-image` when the input image should guide style, composition, subject direction, or visual mood without being treated as the edit target:
+
+```bash
+python scripts/image_gen.py generate \
+  --reference-image input/style-reference.png \
+  --prompt "Create a new website hero image using the reference only for visual style; do not copy text, logos, or layout exactly" \
+  --out output/imagegen/hero-from-reference.png
+```
+
+Repeat `--reference-image` for multiple references. In the prompt, label the role of each reference when it matters.
+
 ## Edit
 
 ```bash

@@ -51,6 +51,14 @@ Label each input image:
 Input images: Image 1 is the edit target; Image 2 is a style reference.
 ```
 
+For reference-image generation, say that the image is not an edit target:
+
+```text
+Input images: Image 1 is a style reference only.
+Primary request: create a new image inspired by the color, lighting, and material feel.
+Constraints: do not copy text, logos, exact layout, or identifiable proprietary elements.
+```
+
 If preserving an existing image, repeat invariants:
 
 ```text

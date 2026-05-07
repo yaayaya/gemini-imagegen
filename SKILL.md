@@ -35,6 +35,7 @@ All generated images include Google's SynthID watermark.
 ## When to use
 
 - Generate a new image: concept art, product shot, cover, website hero, texture, sprite, icon-like bitmap, UI mockup, or infographic.
+- Generate a new image with one or more reference images for style, composition, subject direction, or visual mood using `generate --reference-image`.
 - Edit an existing image: object removal/replacement, background change, style transfer, lighting/weather changes, compositing, or transparent-background preparation.
 - Create many assets or variants for a project.
 
@@ -46,7 +47,7 @@ All generated images include Google's SynthID watermark.
 
 ## Workflow
 
-1. Decide intent: `generate` for new images, `edit` when preserving or transforming an existing image.
+1. Decide intent: `generate` for new images, `generate --reference-image` when input images are references, and `edit` when preserving or transforming an existing image.
 2. Decide whether the output is preview-only or project-bound.
 3. Collect prompt, exact text, constraints, avoid list, output path, and image inputs.
 4. Label every input image by role: edit target, style reference, composition reference, or compositing source.

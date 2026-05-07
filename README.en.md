@@ -12,6 +12,7 @@ The project is intentionally usable in two ways:
 ## Features
 
 - Text-to-image generation with Gemini image models.
+- Reference-image guided generation for style, composition, or visual direction.
 - Text-and-image editing with one or more input images.
 - JSONL batch generation.
 - Prompt augmentation fields for common asset workflows.
@@ -74,6 +75,15 @@ Generate an image:
 python scripts/image_gen.py generate \
   --prompt "A clean 3D illustration of a modern laptop on a desk, colorful abstract canvas on screen, no text, no logos" \
   --out output/imagegen/workspace.png
+```
+
+Generate a new image from a reference image:
+
+```bash
+python scripts/image_gen.py generate \
+  --reference-image input/style-reference.png \
+  --prompt "Create a new landing page hero image using the reference image only for visual style; do not copy any text or logo" \
+  --out output/imagegen/hero-from-reference.png
 ```
 
 Edit an image:

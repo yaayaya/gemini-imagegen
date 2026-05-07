@@ -12,6 +12,7 @@ Gemini ImageGen 是一個使用 Gemini / Nano Banana 圖像模型的產圖 skill
 ## 功能
 
 - 使用 Gemini 圖像模型進行文字產圖。
+- 使用參考圖引導新圖片的風格、構圖或視覺方向。
 - 使用一張或多張輸入圖片進行文字加圖片編輯。
 - 支援 JSONL 批次生成。
 - 提供常見素材工作流的 prompt augmentation 欄位。
@@ -74,6 +75,15 @@ python scripts/image_gen.py generate \
 python scripts/image_gen.py generate \
   --prompt "A clean 3D illustration of a modern laptop on a desk, colorful abstract canvas on screen, no text, no logos" \
   --out output/imagegen/workspace.png
+```
+
+使用參考圖生成新圖片：
+
+```bash
+python scripts/image_gen.py generate \
+  --reference-image input/style-reference.png \
+  --prompt "Create a new landing page hero image using the reference image only for visual style; do not copy any text or logo" \
+  --out output/imagegen/hero-from-reference.png
 ```
 
 編輯圖片：
